@@ -1,0 +1,31 @@
+name: release-production-gate
+on:
+  workflow_dispatch:
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pytest -q
+      - run: python scripts/generate_sbom.py
+      - run: python scripts/secret_scan.py
+      - run: python scripts/validate_config.py
+        env:
+          NEXORA_ENV: staging
+          NEXORA_API_TOKEN: ${{ vars.NEXORA_API_TOKEN }}
+          NEXORA_JWT_SECRET: ${{ vars.NEXORA_JWT_SECRET }}
+      - run: python scripts/deep_checks.py
+      - run: python scripts/load_smoke.py
+      - run: python scripts/prod_policy_check.py
+        env:
+          NEXORA_ENV: prod
+      - run: python scripts/token_launch_gate_check.py
+        env:
+          NEXORA_GATE_KYC: ${{ vars.NEXORA_GATE_KYC }}
+          NEXORA_GATE_AML: ${{ vars.NEXORA_GATE_AML }}
+          NEXORA_GATE_LEGAL: ${{ vars.NEXORA_GATE_LEGAL }}
+          NEXORA_GATE_TREASURY_MONTHS: ${{ vars.NEXORA_GATE_TREASURY_MONTHS }}
+          NEXORA_GATE_AUDIT_PASSED: ${{ vars.NEXORA_GATE_AUDIT_PASSED }}
