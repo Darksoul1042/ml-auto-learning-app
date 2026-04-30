@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from urllib.error import URLError
 from urllib.request import urlopen
 
+from .retry_policy import with_retry
 
 @dataclass(frozen=True)
 class MarketQuote:
@@ -40,8 +41,11 @@ class MarketDataAdapter:
 
     def _fetch_binance(self, symbol: str) -> MarketQuote | None:
         try:
-            with urlopen(f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}", timeout=2) as res:
-                data = json.loads(res.read().decode("utf-8"))
+            def _call() -> dict:
+                with urlopen(f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}", timeout=2) as res:
+                    return json.loads(res.read().decode("utf-8"))
+
+            data = with_retry(_call, retries=2, backoff_seconds=0.15, retry_on=(URLError, TimeoutError))
             return MarketQuote(symbol=symbol, price=float(data["price"]), venue="BINANCE", timestamp_utc=self._now())
         except (URLError, TimeoutError, KeyError, ValueError):
             return None
@@ -53,8 +57,11 @@ class MarketDataAdapter:
             return None
         try:
             url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=usd"
-            with urlopen(url, timeout=2) as res:
-                data = json.loads(res.read().decode("utf-8"))
+            def _call() -> dict:
+                with urlopen(url, timeout=2) as res:
+                    return json.loads(res.read().decode("utf-8"))
+
+            data = with_retry(_call, retries=2, backoff_seconds=0.15, retry_on=(URLError, TimeoutError))
             return MarketQuote(symbol=symbol, price=float(data[coin_id]["usd"]), venue="COINGECKO", timestamp_utc=self._now())
         except (URLError, TimeoutError, KeyError, ValueError):
             return None
