@@ -17,9 +17,30 @@ class PersistenceService:
 
     def _init(self) -> None:
         with self._conn() as c:
-            c.execute("CREATE TABLE IF NOT EXISTS orders (id TEXT PRIMARY KEY, side TEXT, price REAL, qty REAL, status TEXT)")
-            c.execute("CREATE TABLE IF NOT EXISTS ledger (id INTEGER PRIMARY KEY AUTOINCREMENT, account TEXT, amount REAL, currency TEXT)")
-            c.execute("CREATE TABLE IF NOT EXISTS audits (id INTEGER PRIMARY KEY AUTOINCREMENT, action TEXT, payload TEXT)")
+            c.execute(
+                "CREATE TABLE IF NOT EXISTS orders ("
+                "id TEXT PRIMARY KEY, "
+                "side TEXT NOT NULL CHECK(side IN ('BUY','SELL')), "
+                "price REAL NOT NULL CHECK(price > 0), "
+                "qty REAL NOT NULL CHECK(qty > 0), "
+                "status TEXT NOT NULL CHECK(length(status) > 0)"
+                ")"
+            )
+            c.execute(
+                "CREATE TABLE IF NOT EXISTS ledger ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "account TEXT NOT NULL CHECK(length(account) > 0), "
+                "amount REAL NOT NULL, "
+                "currency TEXT NOT NULL CHECK(length(currency) > 0)"
+                ")"
+            )
+            c.execute(
+                "CREATE TABLE IF NOT EXISTS audits ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "action TEXT NOT NULL CHECK(length(action) > 0), "
+                "payload TEXT NOT NULL"
+                ")"
+            )
 
     def save_order(self, order_id: str, side: str, price: float, qty: float, status: str) -> None:
         with self._conn() as c:

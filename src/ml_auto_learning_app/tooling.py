@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from urllib.error import URLError
@@ -33,6 +34,8 @@ class MarketDataAdapter:
             if quote:
                 return quote
 
+        if os.getenv("NEXORA_ENV", "dev").lower() == "prod":
+            raise ValueError("live market data unavailable")
         return self._deterministic_fallback(normalized_symbol)
 
     def _fetch_binance(self, symbol: str) -> MarketQuote | None:

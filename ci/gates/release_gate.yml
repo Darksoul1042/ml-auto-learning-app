@@ -11,6 +11,9 @@ jobs:
           python-version: '3.11'
       - run: python -m pytest -q
       - run: python scripts/deep_checks.py
+      - run: python scripts/prod_policy_check.py
+        env:
+          NEXORA_ENV: prod
       - run: python scripts/token_launch_gate_check.py
         env:
           NEXORA_GATE_KYC: ${{ vars.NEXORA_GATE_KYC }}

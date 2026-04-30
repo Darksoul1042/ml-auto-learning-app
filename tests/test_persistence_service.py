@@ -7,3 +7,13 @@ def test_persistence_save_records(tmp_path) -> None:
     svc.save_order("o1", "BUY", 100, 1, "new")
     svc.save_ledger_entry("u1", 10, "USD")
     svc.save_audit("x", {"k": 1})
+
+
+def test_persistence_rejects_invalid_order_side(tmp_path) -> None:
+    db = tmp_path / "t.db"
+    svc = PersistenceService(str(db))
+    try:
+        svc.save_order("o2", "HOLD", 100, 1, "new")
+        assert False, "expected sqlite integrity failure for invalid side"
+    except Exception:
+        assert True
