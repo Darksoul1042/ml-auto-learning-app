@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml-auto-learning-app"
+version = "0.1.1"
+description = "Executable scaffold for a financial AI assistant architecture"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+ml-assistant = "ml_auto_learning_app.cli:main"

@@ -1,0 +1,28 @@
+-- Production migration baseline
+CREATE TABLE IF NOT EXISTS orders (
+  id TEXT PRIMARY KEY,
+  side TEXT NOT NULL CHECK(side IN ('BUY','SELL')),
+  price NUMERIC NOT NULL CHECK(price>0),
+  qty NUMERIC NOT NULL CHECK(qty>0),
+  status TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+
+CREATE TABLE IF NOT EXISTS ledger_entries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  tx_id TEXT NOT NULL,
+  account TEXT NOT NULL,
+  amount NUMERIC NOT NULL,
+  currency TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_ledger_tx ON ledger_entries(tx_id);
+
+CREATE TABLE IF NOT EXISTS audit_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  tx_id TEXT,
+  action TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
