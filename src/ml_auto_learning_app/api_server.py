@@ -28,7 +28,9 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(payload).encode("utf-8"))
 
     def _authorized(self) -> bool:
-        expected = os.getenv("NEXORA_API_TOKEN", "dev-token")
+        expected = os.getenv("NEXORA_API_TOKEN")
+        if not expected:
+            return False
         provided = self.headers.get("X-API-Token", "")
         return compare_digest(provided, expected)
 
@@ -133,7 +135,10 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
             if err:
                 self._send_json(400, {"ok": False, "error": err})
                 return
-            result = self.assistant.analyze(symbol=symbol, notional_usd=notional if notional is not None else 100.0)
+            if notional is None:
+                self._send_json(400, {"ok": False, "error": "invalid_notional"})
+                return
+            result = self.assistant.analyze(symbol=symbol, notional_usd=notional)
             self._send_json(200, {"ok": result.ok, "message": result.message})
             return
 

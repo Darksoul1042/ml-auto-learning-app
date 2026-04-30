@@ -10,3 +10,9 @@ jobs:
         with:
           python-version: '3.11'
       - run: python scripts/token_launch_gate_check.py
+        env:
+          NEXORA_GATE_KYC: ${{ vars.NEXORA_GATE_KYC }}
+          NEXORA_GATE_AML: ${{ vars.NEXORA_GATE_AML }}
+          NEXORA_GATE_LEGAL: ${{ vars.NEXORA_GATE_LEGAL }}
+          NEXORA_GATE_TREASURY_MONTHS: ${{ vars.NEXORA_GATE_TREASURY_MONTHS }}
+          NEXORA_GATE_AUDIT_PASSED: ${{ vars.NEXORA_GATE_AUDIT_PASSED }}
