@@ -21,7 +21,7 @@ def _read_int_env(name: str, default: int = 0) -> int:
     return int(raw)
 
 
-def main() -> None:
+def main() -> int:
     gate = TokenGateService().evaluate(
         kyc=_read_bool_env("NEXORA_GATE_KYC"),
         aml=_read_bool_env("NEXORA_GATE_AML"),
@@ -30,7 +30,8 @@ def main() -> None:
         audit_passed=_read_bool_env("NEXORA_GATE_AUDIT_PASSED"),
     )
     print("GO" if gate.go else f"NO_GO:{','.join(gate.missing)}")
+    return 0 if gate.go else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

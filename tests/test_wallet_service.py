@@ -14,3 +14,13 @@ def test_import_wallet_25_words() -> None:
     identity = service.import_wallet("bob", mnemonic)
     assert identity.user_id == "bob"
     assert identity.wallet_id
+
+
+def test_import_wallet_requires_user_id() -> None:
+    service = WalletService()
+    mnemonic = " ".join(["apple"] * 12)
+    try:
+        service.import_wallet("   ", mnemonic)
+        assert False, "expected ValueError when user_id is empty"
+    except ValueError as exc:
+        assert "user_id is required" in str(exc)

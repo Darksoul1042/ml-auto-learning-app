@@ -44,6 +44,8 @@ class WalletService:
 
     def import_wallet(self, user_id: str, mnemonic: str) -> WalletIdentity:
         clean_user = user_id.strip().lower()
+        if not clean_user:
+            raise ValueError("user_id is required")
         parts = [p.strip().lower() for p in mnemonic.split() if p.strip()]
         if len(parts) not in WORD_OPTIONS:
             raise ValueError("mnemonic must contain 12 or 25 words")
