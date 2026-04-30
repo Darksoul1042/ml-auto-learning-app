@@ -262,3 +262,11 @@ API demo disponible en `api_server.py`:
 - `GET /wallet/import?user_id=alice&mnemonic=palabra1+palabra2+...`
 
 > Nota: este MVP usa un banco compacto de palabras para demo. En producción debe usarse BIP-39 oficial.
+
+
+### Seguridad API (MVP endurecido)
+
+- Header requerido para endpoints protegidos: `X-API-Token`
+- Token por defecto local: `dev-token` (configurable con `NEXORA_API_TOKEN`)
+- Rate limit básico por IP: 60 requests/minuto
+- `/health` queda público para monitoreo.
