@@ -17,7 +17,10 @@ class AccessToken:
 
 class ProdAuthService:
     def __init__(self, secret: str | None = None, ttl_seconds: int = 3600) -> None:
-        self.secret = (secret or os.getenv("NEXORA_JWT_SECRET", "dev-secret")).encode("utf-8")
+        resolved_secret = secret if secret is not None else os.getenv("NEXORA_JWT_SECRET")
+        if not resolved_secret:
+            raise ValueError("NEXORA_JWT_SECRET is required")
+        self.secret = resolved_secret.encode("utf-8")
         self.ttl_seconds = ttl_seconds
 
     def issue_token(self, user_id: str, role: str = "user") -> AccessToken:

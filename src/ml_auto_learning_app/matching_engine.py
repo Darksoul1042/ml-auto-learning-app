@@ -27,6 +27,8 @@ class MatchingEngine:
         self.sells: list[Order] = []
 
     def add_order(self, order: Order) -> list[Trade]:
+        if order.quantity <= 0:
+            raise ValueError("quantity must be > 0")
         if order.side == "BUY":
             self.buys.append(order)
             self.buys.sort(key=lambda o: o.price, reverse=True)

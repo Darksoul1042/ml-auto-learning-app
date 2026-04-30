@@ -138,7 +138,11 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
             if notional is None:
                 self._send_json(400, {"ok": False, "error": "invalid_notional"})
                 return
-            result = self.assistant.analyze(symbol=symbol, notional_usd=notional)
+            try:
+                result = self.assistant.analyze(symbol=symbol, notional_usd=notional)
+            except ValueError as exc:
+                self._send_json(400, {"ok": False, "error": str(exc)})
+                return
             self._send_json(200, {"ok": result.ok, "message": result.message})
             return
 
