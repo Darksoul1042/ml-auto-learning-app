@@ -18,7 +18,10 @@ def _read_int_env(name: str, default: int = 0) -> int:
     raw = os.getenv(name)
     if raw is None:
         return default
-    return int(raw)
+    try:
+        return int(raw)
+    except ValueError:
+        return default
 
 
 def main() -> int:
