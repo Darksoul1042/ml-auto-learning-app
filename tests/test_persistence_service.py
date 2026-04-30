@@ -17,3 +17,10 @@ def test_persistence_rejects_invalid_order_side(tmp_path) -> None:
         assert False, "expected sqlite integrity failure for invalid side"
     except Exception:
         assert True
+
+
+def test_persistence_tracks_schema_migrations(tmp_path) -> None:
+    db = tmp_path / "t.db"
+    svc = PersistenceService(str(db))
+    versions = svc.list_migrations()
+    assert "001_persistence_baseline" in versions

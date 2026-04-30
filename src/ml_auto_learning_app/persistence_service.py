@@ -18,6 +18,12 @@ class PersistenceService:
     def _init(self) -> None:
         with self._conn() as c:
             c.execute(
+                "CREATE TABLE IF NOT EXISTS schema_migrations ("
+                "version TEXT PRIMARY KEY, "
+                "applied_at TEXT NOT NULL DEFAULT (datetime('now'))"
+                ")"
+            )
+            c.execute(
                 "CREATE TABLE IF NOT EXISTS orders ("
                 "id TEXT PRIMARY KEY, "
                 "side TEXT NOT NULL CHECK(side IN ('BUY','SELL')), "
@@ -41,6 +47,12 @@ class PersistenceService:
                 "payload TEXT NOT NULL"
                 ")"
             )
+            c.execute("INSERT OR IGNORE INTO schema_migrations(version) VALUES(?)", ("001_persistence_baseline",))
+
+    def list_migrations(self) -> list[str]:
+        with self._conn() as c:
+            rows = c.execute("SELECT version FROM schema_migrations ORDER BY version").fetchall()
+        return [str(r["version"]) for r in rows]
 
     def save_order(self, order_id: str, side: str, price: float, qty: float, status: str) -> None:
         with self._conn() as c:
