@@ -251,3 +251,14 @@ python -m http.server 8000
 ## Documento unificado para entrega
 
 Se incluye `docs/DOCUMENTO_UNIFICADO.md` como versión consolidada para subir a cliente/plataforma.
+
+
+## Wallet: creación/importación de frase semilla
+
+API demo disponible en `api_server.py`:
+
+- `GET /wallet/create?user_id=alice&words=12`
+- `GET /wallet/create?user_id=alice&words=25`
+- `GET /wallet/import?user_id=alice&mnemonic=palabra1+palabra2+...`
+
+> Nota: este MVP usa un banco compacto de palabras para demo. En producción debe usarse BIP-39 oficial.

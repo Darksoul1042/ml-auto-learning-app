@@ -5,10 +5,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlparse
 
 from .agent import FinancialAssistant
+from .wallet_service import WalletService
 
 
 class NexoraAPIHandler(BaseHTTPRequestHandler):
     assistant = FinancialAssistant()
+    wallet_service = WalletService()
 
     def _send_json(self, code: int, payload: dict) -> None:
         self.send_response(code)
@@ -20,6 +22,31 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/health":
             self._send_json(200, {"ok": True, "service": "nexora-api"})
+            return
+
+
+        if parsed.path == "/wallet/create":
+            params = parse_qs(parsed.query)
+            user_id = params.get("user_id", [""])[0]
+            words = int(params.get("words", ["12"])[0])
+            try:
+                identity = self.wallet_service.create_wallet(user_id=user_id, words=words)
+            except ValueError as exc:
+                self._send_json(400, {"ok": False, "error": str(exc)})
+                return
+            self._send_json(200, {"ok": True, "user_id": identity.user_id, "wallet_id": identity.wallet_id, "mnemonic": identity.mnemonic})
+            return
+
+        if parsed.path == "/wallet/import":
+            params = parse_qs(parsed.query)
+            user_id = params.get("user_id", [""])[0]
+            mnemonic = params.get("mnemonic", [""])[0]
+            try:
+                identity = self.wallet_service.import_wallet(user_id=user_id, mnemonic=mnemonic)
+            except ValueError as exc:
+                self._send_json(400, {"ok": False, "error": str(exc)})
+                return
+            self._send_json(200, {"ok": True, "user_id": identity.user_id, "wallet_id": identity.wallet_id})
             return
 
         if parsed.path == "/market/quote":
