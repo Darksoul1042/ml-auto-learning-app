@@ -41,3 +41,10 @@ encriptación de secretos gestionada externamente y monitoreo avanzado.
 3. Integraciones reales con proveedores de mercado.
 4. Observabilidad (logs estructurados, métricas, trazas).
 5. Hardening de seguridad (MFA, rate-limit, bloqueo por intentos, RBAC).
+
+
+## 7. Avances implementados (orden solicitado)
+1. **API + DB local**: se agregó `api_server.py` y `db.py` para exponer endpoints HTTP (`/health`, `/market/quote`) y base SQLite local.
+2. **Mercado en tiempo real (base)**: `tooling.py` ahora intenta Binance y CoinGecko en vivo y cae a modo `SIM` si no hay red.
+3. **UI lista para integración live**: la pantalla login está lista para conectar dashboard/streams en siguiente fase.
+4. **Seguridad incremental**: auth MVP existente + controles de riesgo activos antes de respuesta.

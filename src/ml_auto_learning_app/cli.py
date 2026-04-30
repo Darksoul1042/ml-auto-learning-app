@@ -4,6 +4,7 @@ import argparse
 
 from .agent import FinancialAssistant
 from .risk_engine import RiskEngine
+from .api_server import run_api_server
 
 
 def main() -> None:
@@ -12,7 +13,12 @@ def main() -> None:
     parser.add_argument("--notional", type=float, default=100.0, help="Monto nocional en USD")
     parser.add_argument("--max-notional", type=float, default=1000.0, help="Límite máximo permitido por risk engine")
     parser.add_argument("--kill-switch", action="store_true", help="Bloquea cualquier operación")
+    parser.add_argument("--serve-api", action="store_true", help="Levanta API HTTP local")
     args = parser.parse_args()
+
+    if args.serve_api:
+        run_api_server()
+        return
 
     assistant = FinancialAssistant(
         risk=RiskEngine(max_notional_usd=args.max_notional, kill_switch=args.kill_switch)
