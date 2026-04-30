@@ -81,7 +81,7 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
             if err:
                 self._send_json(400, {"ok": False, "error": err})
                 return
-            profile = self.security_service.enable_gsl(user_id=user_id, unlock_after_hours=hours or 24)
+            profile = self.security_service.enable_gsl(user_id=user_id, unlock_after_hours=hours if hours is not None else 24)
             self._send_json(200, {"ok": True, "gsl_enabled": profile.gsl_enabled, "unlock_after_hours": profile.gsl_unlock_after_hours})
             return
 
@@ -106,7 +106,7 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
                 return
             reveal = params.get("reveal", ["false"])[0].lower() == "true"
             try:
-                identity = self.wallet_service.create_wallet(user_id=user_id, words=words or 12)
+                identity = self.wallet_service.create_wallet(user_id=user_id, words=words if words is not None else 12)
             except ValueError as exc:
                 self._send_json(400, {"ok": False, "error": str(exc)})
                 return
@@ -133,7 +133,7 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
             if err:
                 self._send_json(400, {"ok": False, "error": err})
                 return
-            result = self.assistant.analyze(symbol=symbol, notional_usd=notional or 100.0)
+            result = self.assistant.analyze(symbol=symbol, notional_usd=notional if notional is not None else 100.0)
             self._send_json(200, {"ok": result.ok, "message": result.message})
             return
 

@@ -20,3 +20,9 @@ def test_parse_int_validation() -> None:
     value, err = NexoraAPIHandler._parse_int({"words": ["nope"]}, "words", 12)
     assert value is None
     assert err == "invalid_words"
+
+
+def test_parse_int_allows_zero_value() -> None:
+    value, err = NexoraAPIHandler._parse_int({"words": ["0"]}, "words", 12)
+    assert err is None
+    assert value == 0
