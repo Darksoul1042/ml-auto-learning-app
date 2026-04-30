@@ -9,11 +9,13 @@ from urllib.parse import parse_qs, urlparse
 
 from .agent import FinancialAssistant
 from .wallet_service import WalletService
+from .security_service import SecurityService
 
 
 class NexoraAPIHandler(BaseHTTPRequestHandler):
     assistant = FinancialAssistant()
     wallet_service = WalletService()
+    security_service = SecurityService()
     _hits: dict[str, deque[float]] = defaultdict(deque)
     _window_seconds = 60
     _max_requests = 60
@@ -52,6 +54,30 @@ class NexoraAPIHandler(BaseHTTPRequestHandler):
 
         if not self._authorized():
             self._send_json(401, {"ok": False, "error": "unauthorized"})
+            return
+
+
+        if parsed.path == "/security/gsl/enable":
+            params = parse_qs(parsed.query)
+            user_id = params.get("user_id", [""])[0]
+            hours = int(params.get("hours", ["24"])[0])
+            profile = self.security_service.enable_gsl(user_id=user_id, unlock_after_hours=hours)
+            self._send_json(200, {"ok": True, "gsl_enabled": profile.gsl_enabled, "unlock_after_hours": profile.gsl_unlock_after_hours})
+            return
+
+        if parsed.path == "/security/gsl/request-unlock":
+            params = parse_qs(parsed.query)
+            user_id = params.get("user_id", [""])[0]
+            profile = self.security_service.request_gsl_unlock(user_id=user_id)
+            self._send_json(200, {"ok": True, "gsl_unlock_requested_at": profile.gsl_unlock_requested_at})
+            return
+
+        if parsed.path == "/security/whitelist/add":
+            params = parse_qs(parsed.query)
+            user_id = params.get("user_id", [""])[0]
+            address = params.get("address", [""])[0]
+            profile = self.security_service.whitelist_address(user_id=user_id, address=address)
+            self._send_json(200, {"ok": True, "count": len(profile.withdrawal_whitelist)})
             return
 
         if parsed.path == "/wallet/create":

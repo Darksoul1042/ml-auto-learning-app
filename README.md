@@ -270,3 +270,17 @@ API demo disponible en `api_server.py`:
 - Token por defecto local: `dev-token` (configurable con `NEXORA_API_TOKEN`)
 - Rate limit básico por IP: 60 requests/minuto
 - `/health` queda público para monitoreo.
+
+
+## Mejoras inspiradas en exchanges
+
+Se agregaron controles inspirados en prácticas comunes de exchanges:
+
+- **Global Settings Lock (GSL)** con ventana de desbloqueo mínima.
+- **Withdrawal Address Whitelist** para direcciones permitidas de retiro.
+- **Token + rate limiting** para endpoints protegidos.
+
+Endpoints demo:
+- `GET /security/gsl/enable?user_id=alice&hours=24`
+- `GET /security/gsl/request-unlock?user_id=alice`
+- `GET /security/whitelist/add?user_id=alice&address=0xABC...`
