@@ -1,0 +1,47 @@
+:root {
+  --bg-900: #0b1020;
+  --bg-800: #11182d;
+  --bg-700: #18203a;
+  --text-100: #f3f6ff;
+  --text-300: #a7b3d1;
+  --accent-500: #43e7ad;
+  --accent-600: #2dd598;
+  --danger-500: #ff6b7a;
+  --stroke: #2a3657;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Roboto, sans-serif;
+  background: radial-gradient(circle at 10% 20%, #151f3b 0%, var(--bg-900) 45%, #080c18 100%);
+  color: var(--text-100);
+  min-height: 100vh;
+}
+.page { display: grid; place-items: center; min-height: 100vh; padding: 2rem; }
+.login-card {
+  width: min(480px, 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  border: 1px solid var(--stroke);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 20px 80px rgba(0,0,0,.45);
+}
+.brand { display: flex; align-items: center; gap: .8rem; }
+.logo { width: 44px; height: 44px; }
+.brand-name { margin: 0; font-weight: 800; letter-spacing: .08em; color: var(--accent-500); }
+.brand-sub { margin: 0; color: var(--text-300); font-size: .85rem; }
+h1 { margin: 1.1rem 0 .4rem; font-size: 2rem; }
+.subtitle { margin: 0 0 1.2rem; color: var(--text-300); }
+label { display: block; margin-bottom: .5rem; font-weight: 600; }
+input {
+  width: 100%; padding: .9rem 1rem; border-radius: 12px; border: 1px solid var(--stroke);
+  background: var(--bg-800); color: var(--text-100); margin-bottom: .5rem;
+}
+input:focus { outline: 2px solid color-mix(in oklab, var(--accent-500), white 5%); border-color: var(--accent-500); }
+.error-msg { color: var(--danger-500); min-height: 1.2rem; margin: 0 0 .6rem; font-size: .9rem; }
+button { width: 100%; border-radius: 12px; padding: .9rem 1rem; border: none; cursor: pointer; font-size: 1rem; }
+.btn-primary { background: linear-gradient(180deg, var(--accent-500), var(--accent-600)); color: #05131f; font-weight: 700; }
+.btn-secondary { margin-top: .7rem; background: transparent; border: 1px solid var(--stroke); color: var(--text-100); }
+.divider { display: flex; align-items: center; gap: .75rem; margin: 1rem 0; color: var(--text-300); }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--stroke); }

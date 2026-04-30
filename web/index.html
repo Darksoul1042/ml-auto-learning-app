@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEXORA AI Markets | Iniciar sesión</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="login-card" aria-label="Panel de inicio de sesión">
+        <header class="brand">
+          <img src="assets/nexora-logo.svg" alt="Logotipo NEXORA" class="logo" />
+          <div>
+            <p class="brand-name">NEXORA</p>
+            <p class="brand-sub">AI Markets</p>
+          </div>
+        </header>
+
+        <h1>Iniciar sesión</h1>
+        <p class="subtitle">Opera con inteligencia financiera asistida por IA.</p>
+
+        <form id="login-form" novalidate>
+          <label for="email">Correo o número de teléfono</label>
+          <input id="email" name="email" type="text" placeholder="Correo electrónico o teléfono" required />
+          <p id="error-msg" class="error-msg" aria-live="polite"></p>
+          <button type="submit" class="btn-primary">Continuar</button>
+        </form>
+
+        <div class="divider"><span>o</span></div>
+
+        <div class="social-actions">
+          <button type="button" class="btn-secondary">Continuar con llave de acceso</button>
+          <button type="button" class="btn-secondary">Continuar con Google</button>
+          <button type="button" class="btn-secondary">Continuar con Apple</button>
+          <button type="button" class="btn-secondary">Continuar con Telegram</button>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById('login-form');
+      const input = document.getElementById('email');
+      const error = document.getElementById('error-msg');
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const value = input.value.trim();
+        if (!value) {
+          error.textContent = 'Por favor ingresa tu correo o número de teléfono.';
+          input.focus();
+          return;
+        }
+        error.textContent = '';
+        alert('Validación correcta (demo UI). Aquí conectas tu backend de autenticación.');
+      });
+    </script>
+  </body>
+</html>
