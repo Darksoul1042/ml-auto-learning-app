@@ -1,0 +1,36 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NEXORA API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    },
+    "/v1/readiness": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "ready"
+          }
+        }
+      }
+    },
+    "/v1/market/quote": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "quote"
+          }
+        }
+      }
+    }
+  }
+}
