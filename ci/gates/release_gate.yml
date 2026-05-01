@@ -10,6 +10,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pytest -q
+      - run: python scripts/validate_openapi.py
       - run: python scripts/generate_sbom.py
       - run: python scripts/secret_scan.py
       - run: python scripts/validate_config.py

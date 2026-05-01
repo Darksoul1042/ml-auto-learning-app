@@ -259,6 +259,7 @@ API demo disponible en `api_server.py`:
 
 API ASGI productiva (contrato OpenAPI + rutas versionadas) en `src/ml_auto_learning_app/api/prod_app.py`
 con `GET /openapi.json`, `GET /v1/health` y `POST /v1/market/quote`.
+Ejecución sugerida: `python scripts/run_prod_api.py` (requiere `uvicorn` en el entorno).
 
 - `GET /wallet/create?user_id=alice&words=12`
 - `GET /wallet/create?user_id=alice&words=25`
