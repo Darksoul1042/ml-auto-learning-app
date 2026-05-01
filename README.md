@@ -257,6 +257,9 @@ Se incluye `docs/DOCUMENTO_UNIFICADO.md` como versión consolidada para subir a 
 
 API demo disponible en `api_server.py`:
 
+API ASGI productiva (contrato OpenAPI + rutas versionadas) en `src/ml_auto_learning_app/api/prod_app.py`
+con `GET /openapi.json`, `GET /v1/health` y `POST /v1/market/quote`.
+
 - `GET /wallet/create?user_id=alice&words=12`
 - `GET /wallet/create?user_id=alice&words=25`
 - `GET /wallet/import?user_id=alice&mnemonic=palabra1+palabra2+...`
